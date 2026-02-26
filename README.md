@@ -1,107 +1,121 @@
-# 🌱 RenewCast v4
+ RenewCast v4 — Grid Intelligence Pipeline
 
-## Autonomous Grid Dispatch System — Pathway Native
-
-> Real-time renewable forecasting, RL-based backup dispatch, and regulatory-grounded AI advisories — inside a single streaming pipeline.
-
----
-
-## 🚀 One-Line Pitch
-
-RenewCast is a fully autonomous grid dispatch system where every new weather event triggers:
-
-1. Online quantile forecast update
-2. RL-based backup allocation
-3. Compliance-gated dispatch decision
-4. Regulatory-grounded AI advisory
-
-All inside a single Pathway pipeline.
+Fully autonomous solar grid dispatch. Every weather event triggers a forecast,
+a dispatch decision, and a regulatory-grounded natural language advisory.
 
 ---
 
-## 🏗 Architecture Overview
+## Quick Start (Docker — Recommended on Windows)
 
-![Image](https://docs.aws.amazon.com/images/whitepapers/latest/build-modern-data-streaming-analytics-architectures/images/serverless-data-pipeline.png)
+```bash
+# 1. Copy and edit environment file
+copy .env.example .env
+# Open .env in Notepad and add your API keys (optional)
 
-![Image](https://hpe-developer-portal.s3.amazonaws.com/uploads/media/2020/9/image7-1603902952832.png)
+# 2. Build and start
+docker compose build
+docker compose up
 
-![Image](https://dz2cdn1.dzone.com/storage/temp/13912846-real-time-event-based-information-system-architect.png)
+# 3. Check it's working — open in browser:
+#    http://localhost:8000/status
+#    http://localhost:8000/dispatch
 
-![Image](https://miro.medium.com/0%2Ak9vCsZDxVn27YWV0.jpg)
-
----
-
-## 🔁 Real-Time Flow
-
-```
-Weather Event (30s)
-        ↓
-Pathway Sliding Window (6h per plant)
-        ↓
-River Quantile Model (P10/P50/P90)
-        ↓
-RL Dispatch Agent (PPO)
-        ↓
-Compliance Gate (RAG + Constraints)
-        ↓
-Dispatch Command + LLM Advisory
-        ↓
-Streamlit Live Dashboard
+# 4. Open the live dashboard
+#    Double-click scripts/demo_ui.html in File Explorer
 ```
 
 ---
 
-## 🧠 Core Technologies
+## Demo Commands
 
-| Component        | Technology                           |
-| ---------------- | ------------------------------------ |
-| Streaming Engine | Pathway                              |
-| Online ML        | River (Quantile Regression)          |
-| RL Agent         | Stable Baselines3 PPO                |
-| RAG              | Pathway Document Store + GPT-4o-mini |
-| UI               | Streamlit                            |
-| Deployment       | Docker Compose                       |
+```bash
+# Inject a cloud event on RJ01
+docker compose run --rm pathway_pipeline python scripts/inject_event.py --type=cloud --plant=RJ01 --severity=high
 
----
+# Inject inverter fault on GJ01
+docker compose run --rm pathway_pipeline python scripts/inject_event.py --type=inverter_fault --plant=GJ01
 
-## 📊 Live Demo Interface
+# Clear all events
+docker compose run --rm pathway_pipeline python scripts/inject_event.py --clear
 
-![Image](https://miro.medium.com/v2/resize%3Afit%3A1400/1%2AR7LakSGt1Cb3_yC5DsuD1g.png)
-
-![Image](https://res.cloudinary.com/graham-media-group/image/upload/f_auto/q_auto/c_scale%2Cw_640/v1/media/gmg/3KJMRS6HGVFPDBV7NMQ5HQZC2Q.jpg?_a=DAJHqpE+ZAAA)
-
-![Image](https://miro.medium.com/v2/resize%3Afit%3A1400/1%2AEu7pM1p1C1WfFPb6KkOwow.png)
-
-![Image](https://images.prismic.io/plotly-marketing-website-2/ed30f32d-cdc2-45d9-a4f4-2367142ec64a_Manufacturing1%2BManufacturing%2BSPC%2BDashboard.png?auto=format%2Ccompress)
-
-### Dashboard Sections
-
-* Per-plant forecast (P10/P50/P90)
-* Live dispatch decisions
-* Held compliance commands
-* AI-generated regulatory advisory
+# Watch outputs live (Linux/Mac/WSL)
+bash scripts/watch_outputs.sh
+```
 
 ---
 
-## 🛡 Compliance Authority (Not Decorative AI)
+## API Endpoints  (all at http://localhost:8000)
 
-Dispatch commands are gated before execution.
-
-If:
-
-* Ramp rate exceeded
-* Must-run constraint violated
-
-The command is **held**, not executed.
-
-The AI advisory explains why.
+| Endpoint | What it returns |
+|----------|----------------|
+| /dispatch?n=20 | Last N dispatch commands |
+| /advisories?n=10 | Last N LLM operator advisories |
+| /anomalies?n=10 | Last N anomaly reports |
+| /telemetry?n=30 | Raw telemetry stream |
+| /status | Record counts + health |
+| /stream/dispatch | SSE live stream |
 
 ---
 
-## 📚 Live RAG Re-Index Demo
+## Project Files
 
-Drop new PDF into `/docs/` →
-System re-indexes →
-Next advisory references updated regulation.
+```
+renewcast/
+├── docker-compose.yml          Start everything
+├── Dockerfile.pipeline         Pipeline container
+├── Dockerfile.api              API container
+├── requirements.pipeline.txt   Python deps for pipeline
+├── requirements.api.txt        Python deps for API
+├── .env.example                Copy to .env and add keys
+│
+├── pathway_pipeline/
+│   ├── main.py                 Entry point — start here
+│   ├── config.py               Plants, paths, settings
+│   ├── telemetry_source.py     Synthetic sensor stream
+│   ├── weather_source.py       OpenWeatherMap poller
+│   ├── forecast_model.py       River online ML (P10/P50/P90)
+│   ├── rl_dispatch.py          Dispatch decision agent
+│   ├── document_store.py       Live FAISS RAG index
+│   └── llm_agent.py            GPT-4o-mini advisories
+│
+├── api/
+│   └── main.py                 FastAPI server
+│
+├── docs/                       Live-indexed regulatory docs
+│   ├── cerc_merit_order_2025.txt
+│   ├── plant_specs_RJ01.txt
+│   └── gujarat_sldc_protocol.txt
+│
+├── scripts/
+│   ├── inject_event.py         Demo event injector
+│   ├── train_rl_policy.py      Pre-train RL policy (optional)
+│   ├── demo_ui.html            Browser dashboard
+│   ├── run_local.sh            Local runner (no Docker)
+│   └── watch_outputs.sh        Live terminal watcher
+│
+└── data/                       Runtime outputs (auto-created)
+    ├── dispatch_commands.jsonl
+    ├── operator_advisory.jsonl
+    └── anomaly_reports.jsonl
+```
 
+---
 
+## API Keys
+
+Both are OPTIONAL. System runs fully without them.
+
+- OPENAI_API_KEY — from platform.openai.com (costs ~1 rupee for full demo)
+- OPENWEATHER_API_KEY — from openweathermap.org (free tier is enough)
+
+Without keys: weather is synthetic, LLM shows placeholder text.
+Everything else (forecasting, dispatch, anomaly detection) runs normally.
+
+---
+
+## Adding a New Plant
+
+1. Add to PLANTS list in pathway_pipeline/config.py
+2. Add backup assets to BACKUP_ASSETS in pathway_pipeline/rl_dispatch.py
+3. Add plant spec doc to docs/plant_specs_XXXX.txt
+4. Restart pipeline
