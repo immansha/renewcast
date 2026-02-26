@@ -1,0 +1,12 @@
+urllib3
+requests
+pathway
+river
+openai
+groq
+google-generativeai
+numpy
+pandas
+faiss-cpu
+pypdf
+python-dotenv

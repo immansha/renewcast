@@ -1,0 +1,50 @@
+PLANT TECHNICAL SPECIFICATIONS
+Plant ID: RJ01 - Rajasthan Solar Power Plant
+Location: Jodhpur District, Rajasthan
+SLDC: RLDC
+
+SECTION 1 - CAPACITY
+Installed Capacity: 100 MW AC
+DC Capacity: 110 MWp
+Panel Type: Monocrystalline PERC 540W
+Total Panels: 203,703 units
+Panel Efficiency: 20.9% at STC
+Commissioned: 2022
+
+SECTION 2 - INVERTER SPECIFICATIONS
+Model: SMA Sunny Central 4400-EV
+Units: 25 inverters at 4.4 MW each
+Rated Efficiency: 97.3% at full load
+Efficiency at 50% load: 96.8%
+Minimum acceptable threshold: 94.5%
+
+SECTION 3 - PERFORMANCE BENCHMARKS
+Specific Energy Yield P50: 1820 kWh per kWp per year
+Plant Load Factor P50: 22.5%
+Availability Factor contractual: 98%
+Performance Ratio P50: 0.78
+
+SECTION 4 - MAINTENANCE PROTOCOLS
+
+4.1 Routine Schedule:
+  Panel cleaning: every 15 days (desert dust accumulation)
+  Inverter inspection: monthly
+  Thermal imaging: quarterly
+  String performance test: semi-annually
+
+4.2 Soiling Loss Assessment:
+Typical soiling loss in Rajasthan: 3-8% without regular cleaning.
+If inverter efficiency drops below 94.5% without weather explanation:
+  Initiate soiling investigation before inverter replacement.
+
+4.3 Inverter Fault Protocol:
+If measured efficiency is below rated by more than 3%:
+  Step 1: Check firmware update via manufacturer portal
+  Step 2: Inspect cooling fans and heat sinks
+  Step 3: Run inverter self-diagnostic mode
+  Step 4: If unresolved in 4 hours escalate to manufacturer service
+
+4.4 Emergency Shutdown:
+If AC output drops to zero during daylight:
+  Contact RLDC within 5 minutes: 0141-2744444
+  Submit deviation intimation on POSOCO portal within 15 minutes

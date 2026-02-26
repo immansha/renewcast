@@ -1,0 +1,9 @@
+urllib3
+requests
+fastapi
+uvicorn
+python-dotenv
+aiofiles
+streamlit
+pandas
+plotly

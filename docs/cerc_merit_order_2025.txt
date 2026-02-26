@@ -1,0 +1,56 @@
+CENTRAL ELECTRICITY REGULATORY COMMISSION
+MERIT ORDER DISPATCH RULES 2025
+Effective: January 1, 2025
+
+SECTION 1 - DISPATCH PRIORITY CLASSES
+
+Class 1 - Must-Run Sources:
+  Nuclear, run-of-river hydro, renewable energy (solar, wind).
+  Dispatched first regardless of cost.
+
+Class 2 - Hydro and Pumped Storage:
+  Reservoir hydro, pumped storage. Fast ramp under 8 minutes.
+
+Class 3 - Gas-Based Generation:
+  CCGT and Open Cycle Gas. Ramp time 15-20 min CCGT, 5-10 min OCGT.
+  Merit order within class by heat rate (lowest first).
+
+Class 4 - Coal-Based Thermal:
+  Dispatched last. Cold start: 4 hours notice. Warm start: 30 minutes.
+
+SECTION 2 - RESERVE REQUIREMENTS
+
+Spinning Reserve: Minimum 5% of total demand at all times.
+For grids with renewable penetration above 40%:
+  Spinning reserve increases to 10% of demand.
+
+Frequency Regulation: plus or minus 0.2 Hz from 50 Hz nominal.
+AGC response required within 30 seconds.
+
+SECTION 3 - DEVIATION SETTLEMENT MECHANISM (DSM)
+
+Deviation band: plus or minus 15% of scheduled output without penalty.
+Beyond 15%: INR 0.50 per kWh per percentage point of deviation.
+
+SECTION 4 - RENEWABLE ENERGY INTEGRATION
+
+4.1 Solar Integration Protocol:
+Maintain backup equal to 30% of scheduled solar during peak solar hours
+(10:00 to 15:00 IST).
+
+4.2 Ramp Event Protocol:
+When solar forecast drops more than 20% within 30 minutes:
+  - Immediately notify backup assets
+  - Pre-position gas backup within ramp range
+  - Maintain 10% spinning reserve above normal requirement
+
+4.3 Forecasting Requirements:
+Solar generators above 10 MW must submit:
+  - Day-ahead forecast by 10:00 IST previous day
+  - Intra-day update every 30 minutes during generation hours
+
+SECTION 5 - PENALTIES
+
+Failure to comply with merit order dispatch without valid technical reason:
+  First offense: Warning
+  Subsequent offenses: INR 5,00,000 per incident

@@ -1,0 +1,53 @@
+GUJARAT STATE LOAD DESPATCH CENTRE
+OPERATIONAL PROTOCOL FOR SOLAR GENERATORS
+Protocol: GSLDC/SOL/2024/07
+
+SECTION 1 - SCHEDULING
+
+1.1 Day-Ahead Submission:
+Submit schedules by 09:00 IST for next day in 15-minute blocks (96 slots).
+Format: GSLDC portal or XML via SFTP.
+
+1.2 Intra-Day Revision:
+Revisions allowed up to 2 hours before affected block.
+Maximum revision: plus or minus 20% of original schedule.
+
+SECTION 2 - COMMUNICATION
+
+Normal Operations:
+GSLDC Control Room: 079-23256000 (24x7)
+SCADA data: mandatory, 5-second resolution
+
+Abnormal Events (deviation above 15%):
+Immediate phone call to control room.
+Email within 30 minutes: dispatch@gsldc.gov.in
+Written report Form GSLDC-11 within 24 hours.
+
+SECTION 3 - MAINTENANCE NOTIFICATION
+
+Planned: 72 hours advance notice via coordination portal.
+Forced Outage: notify within 15 minutes, estimated restoration within 1 hour.
+
+SECTION 4 - PERFORMANCE AND PENALTIES
+
+4.1 Availability Target:
+Annual: 97%. Peak demand (16:00-22:00): 99% if solar resource is available.
+
+4.2 Forecasting Accuracy:
+Monthly MAPE must be below 15%.
+Three consecutive months above 15% triggers performance review.
+
+4.3 DSM:
+CERC DSM regulations apply. See CERC Merit Order 2025 Section 3.
+
+SECTION 5 - SPECIAL PROTOCOLS
+
+5.1 Cyclone Protocol:
+When IMD issues cyclone warning for Gujarat coast:
+  Pre-emptively schedule zero generation from coastal plants.
+  Notify GSLDC 6 hours before expected impact.
+
+5.2 Grid Frequency Emergency:
+If frequency drops below 49.5 Hz:
+  All solar generators must immediately maximise output.
+  Override all voluntary curtailment agreements.

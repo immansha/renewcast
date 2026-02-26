@@ -1,0 +1,47 @@
+
+
+services:
+  pathway_pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline
+    container_name: renewcast_pipeline
+    volumes:
+      - ./docs:/app/docs
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+      - DATA_DIR=/app/data
+      - DOCS_DIR=/app/docs
+      - RIVER_STATE_PATH=/app/models/river_state.pkl
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: renewcast_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - DATA_DIR=/app/data
+    restart: unless-stopped
+
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: renewcast_streamlit
+    command: streamlit run streamlit_app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - DATA_DIR=/app/data
+    restart: unless-stopped
