@@ -1,33 +1,68 @@
-# 🌱 RenewCast v4
+Here it is directly — copy this whole thing into your `README.md` file:
 
+```markdown
+# 🌱 RenewCast v4
 ## Autonomous Grid Dispatch System — Pathway Native
 
-> Real-time renewable forecasting, RL-based backup dispatch, and regulatory-grounded AI advisories — inside a single streaming pipeline.
+> Real-time renewable forecasting, RL-based backup dispatch, and regulatory-grounded AI advisories — all inside a single streaming pipeline.
 
 ---
 
 ## 🚀 One-Line Pitch
 
-RenewCast is a fully autonomous grid dispatch system where every new weather event triggers:
+**RenewCast** is a fully autonomous grid dispatch system where every new weather event triggers:
 
-1. Online quantile forecast update
-2. RL-based backup allocation
-3. Compliance-gated dispatch decision
-4. Regulatory-grounded AI advisory
+1. Online quantile forecast update (P10 / P50 / P90)
+2. RL-based backup allocation (PPO agent)
+3. Compliance-gated dispatch decision (RAG + constraint check)
+4. Regulatory-grounded AI advisory (CERC-cited, LLM-generated)
 
-All inside a single Pathway pipeline.
+All inside a **single Pathway pipeline**. No cron jobs. No batch inference. No human trigger.
 
 ---
 
-## 🏗 Architecture Overview
+## 🖥️ Live Demo Screenshots
 
-![Image](https://docs.aws.amazon.com/images/whitepapers/latest/build-modern-data-streaming-analytics-architectures/images/serverless-data-pipeline.png)
+### Dashboard — Live Grid Dispatch System
+![RenewCast Live Dashboard](s4.jpeg)
 
-![Image](https://hpe-developer-portal.s3.amazonaws.com/uploads/media/2020/9/image7-1603902952832.png)
+### Generation Forecast — P10 / P50 / P90 Charts
+![Forecast Charts](s3.jpeg)
 
-![Image](https://dz2cdn1.dzone.com/storage/temp/13912846-real-time-event-based-information-system-architect.png)
+### Autonomous Dispatch Commands (Live)
+![Dispatch Commands](s2.jpeg)
 
-![Image](https://miro.medium.com/0%2Ak9vCsZDxVn27YWV0.jpg)
+### Compliance-Held Commands + AI Advisory
+![Compliance Gate and Advisory](s1.jpeg)
+
+---
+
+## 🏗️ Architecture Overview
+
+```
+OpenWeatherMap API (30s polling)     Synthetic Telemetry Stream
+         |                                      |
+         +──────────────────────────────────────+
+                          |
+                Pathway HTTP Connector
+                + Python Input Connector
+                          |
+                Pathway Sliding Window (6h per plant)
+                          |
+          River Online Forecast Model (P10 / P50 / P90)
+                          |
+          +───────────────+────────────────+
+          |                                |
+RL Dispatch Agent (SB3 PPO)       Pathway Document Store
+                                  CERC rules | Plant specs
+          +───────────────+────────────────+
+                          |
+       Pathway LLM xPack — Grid Intelligence Agent
+                          |
+          dispatch_commands.jsonl + operator_advisory.jsonl
+                          |
+                Streamlit Dashboard (live)
+```
 
 ---
 
@@ -38,13 +73,16 @@ Weather Event (30s)
         ↓
 Pathway Sliding Window (6h per plant)
         ↓
-River Quantile Model (P10/P50/P90)
+River Quantile Model (P10 / P50 / P90)
         ↓
 RL Dispatch Agent (PPO)
         ↓
-Compliance Gate (RAG + Constraints)
+Compliance Gate (RAG + ramp-rate + must-run check)
         ↓
-Dispatch Command + LLM Advisory
+Approved Command → dispatch_commands.jsonl
+Held Command    → held_commands.jsonl (with reason)
+        ↓
+LLM Advisory (CERC-cited, RAG-grounded)
         ↓
 Streamlit Live Dashboard
 ```
@@ -53,103 +91,79 @@ Streamlit Live Dashboard
 
 ## 🧠 Core Technologies
 
-| Component        | Technology                           |
-| ---------------- | ------------------------------------ |
-| Streaming Engine | Pathway                              |
-| Online ML        | River (Quantile Regression)          |
-| RL Agent         | Stable Baselines3 PPO                |
-| RAG              | Pathway Document Store + GPT-4o-mini |
-| UI               | Streamlit                            |
-| Deployment       | Docker Compose                       |
+| Component | Technology |
+|---|---|
+| Streaming Engine | Pathway |
+| Online ML | River — QuantileRegressor (α = 0.1 / 0.5 / 0.9) |
+| RL Agent | Stable Baselines3 PPO |
+| RAG | Pathway Document Store + GPT-4o-mini / Groq |
+| Compliance Gate | Ramp-rate + CERC constraint check |
+| UI | Streamlit |
+| Deployment | Docker Compose |
 
 ---
 
-## 📊 Live Demo Interface
+## 🌍 Three Plants
 
-![Image](https://miro.medium.com/v2/resize%3Afit%3A1400/1%2AR7LakSGt1Cb3_yC5DsuD1g.png)
-
-![Image](https://res.cloudinary.com/graham-media-group/image/upload/f_auto/q_auto/c_scale%2Cw_640/v1/media/gmg/3KJMRS6HGVFPDBV7NMQ5HQZC2Q.jpg?_a=DAJHqpE+ZAAA)
-
-![Image](https://miro.medium.com/v2/resize%3Afit%3A1400/1%2AEu7pM1p1C1WfFPb6KkOwow.png)
-
-![Image](https://images.prismic.io/plotly-marketing-website-2/ed30f32d-cdc2-45d9-a4f4-2367142ec64a_Manufacturing1%2BManufacturing%2BSPC%2BDashboard.png?auto=format%2Ccompress)
-
-### Dashboard Sections
-
-* Per-plant forecast (P10/P50/P90)
-* Live dispatch decisions
-* Held compliance commands
-* AI-generated regulatory advisory
+| Plant ID | Location | Type | Capacity |
+|---|---|---|---|
+| RJ01 | Jodhpur, Rajasthan | Solar | 100 MW |
+| GJ01 | Kutch, Gujarat | Solar + Wind | 80 MW |
+| TN01 | Tirunelveli, Tamil Nadu | Wind | 60 MW |
 
 ---
 
-## 🛡 Compliance Authority (Not Decorative AI)
+## 🛡️ Compliance Authority — Not Decorative AI
 
-Dispatch commands are gated before execution.
+Commands are **held before execution** if they:
+- Exceed ramp rate limits
+- Violate CERC must-run constraints
 
-If:
+Held commands appear in `held_commands.jsonl` with full reason and adjusted MW. The LLM advisory explains the violation citing the live CERC document.
 
-* Ramp rate exceeded
-* Must-run constraint violated
-
-The command is **held**, not executed.
-
-The AI advisory explains why.
+> "The LLM doesn't just explain — it gates."
 
 ---
 
 ## 📚 Live RAG Re-Index Demo
 
-Drop new PDF into `/docs/` →
-System re-indexes →
-Next advisory references updated regulation.
-
-This is demonstrated live in the final 30 seconds of the demo.
+Drop a new PDF into `/docs/` → Document Store re-indexes in seconds → next advisory references the updated regulation automatically.
 
 ---
 
 ## 🧪 How to Run
 
-### 1️⃣ Clone Repository
-
-```
-git clone <repo_url>
+### 1. Clone
+```bash
+git clone https://github.com/immansha/renewcast.git
 cd renewcast
 ```
 
-### 2️⃣ Add Environment Variables
-
+### 2. Set API Keys
+```bash
+cp .env.example .env
+# add your keys to .env
 ```
-export OPENAI_API_KEY=your_key
-export OWM_API_KEY=your_key
-```
 
-### 3️⃣ Start Entire System
-
-```
+### 3. Start Everything
+```bash
 docker compose up --build
 ```
 
-### 4️⃣ Open UI
-
+### 4. Open Dashboard
 ```
 http://localhost:8501
 ```
 
 ---
 
-## 🌪 Inject Demo Event
+## 🌪️ Inject a Demo Event
 
+```bash
+python scripts/inject_event.py --type=cloud --plant=RJ01 --severity=high
+python scripts/inject_event.py --type=inverter_fault --plant=GJ01
+python scripts/inject_event.py --clear
 ```
-python inject_event.py --plant=RJ01 --severity=high
-```
-
-Observe:
-
-* Forecast drops
-* RL increases backup
-* Advisory updates
-* Compliance gate active
 
 ---
 
@@ -157,51 +171,49 @@ Observe:
 
 ```
 renewcast/
-│
-├── pathway_pipeline.py
-├── streamlit_app.py
-├── inject_event.py
 ├── docker-compose.yml
-│
-├── connectors/
-├── models/
-├── agents/
+├── .env.example
+├── pathway_pipeline/
+│   ├── main.py
+│   ├── weather_source.py
+│   ├── telemetry_source.py
+│   ├── forecast_model.py
+│   ├── rl_dispatch.py
+│   ├── document_store.py
+│   └── llm_agent.py
+├── api/
+│   └── main.py
+├── scripts/
+│   ├── inject_event.py
+│   └── train_rl_policy.py
 ├── docs/
-├── outputs/
-└── trained_models/
+│   ├── cerc_merit_order_2025.pdf
+│   └── gujarat_sldc_protocol.pdf
+├── data/
+│   ├── dispatch_commands.jsonl
+│   ├── held_commands.jsonl
+│   └── operator_advisory.jsonl
+└── models/
+    └── dispatch_policy.zip
 ```
 
 ---
 
-## 📈 Why This Is Different
+## 🏆 Hackathon Track — Hack for Green Bharat 2026
 
-Most dashboards visualize data.
-
-RenewCast **acts** on data.
-
-Most RAG systems generate text.
-
-RenewCast enforces compliance.
-
-Most ML models retrain offline.
-
-RenewCast learns online.
+| Requirement | Status |
+|---|---|
+| Pathway-native streaming pipeline | ✅ |
+| Online ML with River | ✅ |
+| RAG with actual decision authority | ✅ |
+| Document Store live re-index | ✅ |
+| Real-time autonomous decision loop | ✅ |
+| Streamlit demo UI | ✅ |
+| Docker Compose one-command startup | ✅ |
 
 ---
 
-## 🔮 Future Work
+*Built with Pathway, River, Stable Baselines3, and a lot of coffee. ☕*
+```
 
-* Real SCADA integration
-* Online RL policy updates
-* DSM penalty-aware dispatch
-* Multi-state grid scaling
-
----
-
-## 🏆 Hackathon Track Alignment
-
-✔ Pathway-native streaming
-✔ Online ML (River)
-✔ RAG with authority
-✔ Document Store live re-index
-✔ Real-time autonomous decision loop
+Just make sure `s1.jpeg`, `s2.jpeg`, `s3.jpeg`, `s4.jpeg` are in the **same folder as README.md** when you push to GitHub and the images will show up automatically.
